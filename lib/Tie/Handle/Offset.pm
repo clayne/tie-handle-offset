@@ -21,15 +21,15 @@ my %REGISTRY = ();
 sub TIEHANDLE
 {
   my $class = shift;
-  my $params = unshift if ref $_[-1] eq 'HASH';
+  my $params = pop if ref $_[-1] eq 'HASH';
 
-  my $self    = \do { local *HANDLE};
+  my $self    = \do { no warnings 'once'; local *HANDLE};
   bless $self,$class;
   my $id = refaddr $self;
   weaken( $REGISTRY{ $id } = $self );
   $self->OPEN(@_) if (@_);
-  if ( $params{offset} ) {
-    $HEAD_OFF{ $id } = $params{offset};
+  if ( $params->{offset} ) {
+    $HEAD_OFF{ $id } = $params->{offset};
     seek($self, $HEAD_OFF{ $id }, 0);
   }
   return $self;
@@ -44,19 +44,22 @@ sub TELL    {
 sub SEEK    {
   my ($self, $pos, $whence) = @_;
   my $id = refaddr $self;
+  my $rc;
   if ( $whence == 0 || $whence == 1 ) { # pos from start, cur
-    $pos += $HEAD_OFF{ $id };
+    $rc = seek($self, $pos + $HEAD_OFF{ $id }, $whence);
   }
-  my $rc = seek($self,$pos,$whence)
-  if ( $whence == 2 && tell($self) < $HEAD_OFF{$id} ) { # overshot
-      $rc = seek($self, $HEAD_OFF{ $id }, 0);
+  elsif ( _size($self) + $pos < $HEAD_OFF{$id} ) { # from end
+    $rc = '';
   }
-  return !! $rc;
+  else {
+    $rc = seek($self,$pos,$whence);
+  }
+  return $rc;
 }
 
 sub OPEN
 {
-  my $id = refddr $_[0];
+  my $id = refaddr $_[0];
   $HEAD_OFF{ $id } = 0;
   $_[0]->CLOSE if defined($_[0]->FILENO);
   @_ == 2 ? open($_[0], $_[1]) : open($_[0], $_[1], $_[2]);
@@ -79,8 +82,6 @@ sub DESTROY {
     my $self = shift;
     delete $HEAD_OFF{ refaddr $self };
     delete $REGISTRY{ refaddr $self };
-
-    $self->SUPER::DESTROY;
 }
 
 #--------------------------------------------------------------------------#
