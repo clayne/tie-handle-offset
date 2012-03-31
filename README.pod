@@ -10,7 +10,7 @@ version 0.001
 
   use Tie::Handle::Offset;
 
-  tie my $fh, 'Tie::Handle::Offset', "<", $filename, { offset => 20 };
+  tie *FH, 'Tie::Handle::Offset', "<", $filename, { offset => 20 };
 
 =head1 DESCRIPTION
 

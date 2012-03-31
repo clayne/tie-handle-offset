@@ -52,6 +52,10 @@
       "Tie::Handle::Offset" : {
          "file" : "lib/Tie/Handle/Offset.pm",
          "version" : "0.001"
+      },
+      "Tie::Handle::SkipHeader" : {
+         "file" : "lib/Tie/Handle/SkipHeader.pm",
+         "version" : "0.001"
       }
    },
    "release_status" : "stable",

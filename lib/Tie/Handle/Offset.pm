@@ -9,19 +9,34 @@ use parent qw/Tie::StdHandle/;
 use Scalar::Util qw( refaddr weaken );
 
 #--------------------------------------------------------------------------#
-# Inside-out data storage
+# Inside-out data storage and accessor
 #--------------------------------------------------------------------------#
 
 my %HEAD_OFF = ();
+
+sub offset {
+  my $self = shift;
+  if ( @_ ) {
+    return $HEAD_OFF{ refaddr $self } = shift;
+  }
+  else {
+    return $HEAD_OFF{ refaddr $self };
+  }
+}
 
 # Track objects for thread-safety
 
 my %REGISTRY = ();
 
+#--------------------------------------------------------------------------#
+# Tied handle methods
+#--------------------------------------------------------------------------#
+
 sub TIEHANDLE
 {
   my $class = shift;
-  my $params = pop if ref $_[-1] eq 'HASH';
+  my $params;
+  $params = pop if ref $_[-1] eq 'HASH';
 
   my $self    = \do { no warnings 'once'; local *HANDLE};
   bless $self,$class;
@@ -115,7 +130,7 @@ sub CLONE {
 
   use Tie::Handle::Offset;
 
-  tie my $fh, 'Tie::Handle::Offset', "<", $filename, { offset => 20 };
+  tie *FH, 'Tie::Handle::Offset', "<", $filename, { offset => 20 };
 
 =head1 DESCRIPTION
 
