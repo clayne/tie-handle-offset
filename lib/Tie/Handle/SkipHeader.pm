@@ -6,7 +6,6 @@ package Tie::Handle::SkipHeader;
 # VERSION
 
 use parent qw/Tie::Handle::Offset/;
-use Scalar::Util qw( refaddr weaken );
 
 sub TIEHANDLE
 {

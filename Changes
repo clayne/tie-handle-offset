@@ -2,6 +2,11 @@ Revision history for Tie-Handle-Offset
 
 {{$NEXT}}
 
+    [OTHER]
+
+    - Inlined methods from Tie::StdHandle to avoid dependency
+      on Perl 5.8.9+
+
 0.001     2012-03-31 08:17:37 Europe/Paris
     -
 

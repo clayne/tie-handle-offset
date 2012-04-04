@@ -5,7 +5,7 @@ package Tie::Handle::Offset;
 # ABSTRACT: Tied handle that hides the beginning of a file
 # VERSION
 
-use parent qw/Tie::StdHandle/;
+use parent qw/Tie::Handle/;
 use Scalar::Util qw( refaddr weaken );
 
 #--------------------------------------------------------------------------#
@@ -87,6 +87,24 @@ sub _size {
   my $size = tell($self);
   seek($self,$cur,0); # reset
   return $size;
+}
+
+#--------------------------------------------------------------------------#
+# Methods copied from Tie::StdHandle to avoid dependency on Perl 5.8.9/5.10.0
+#--------------------------------------------------------------------------#
+
+sub EOF     { eof($_[0]) }
+sub FILENO  { fileno($_[0]) }
+sub CLOSE   { close($_[0]) }
+sub BINMODE { binmode($_[0]) }
+sub READ     { read($_[0],$_[1],$_[2]) }
+sub READLINE { my $fh = $_[0]; <$fh> }
+sub GETC     { getc($_[0]) }
+
+sub WRITE
+{
+ my $fh = $_[0];
+ print $fh substr($_[1],0,$_[2])
 }
 
 #--------------------------------------------------------------------------#

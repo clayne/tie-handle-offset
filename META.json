@@ -4,7 +4,7 @@
       "David Golden <dagolden@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120900",
+   "generated_by" : "Dist::Zilla version 4.300009, CPAN::Meta::Converter version 2.120630",
    "license" : [
       "apache_2_0"
    ],
@@ -33,7 +33,7 @@
       "runtime" : {
          "requires" : {
             "Scalar::Util" : "0",
-            "Tie::StdHandle" : "0",
+            "Tie::Handle" : "0",
             "parent" : "0",
             "perl" : "5.006",
             "strict" : "0",
@@ -51,11 +51,11 @@
    "provides" : {
       "Tie::Handle::Offset" : {
          "file" : "lib/Tie/Handle/Offset.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       },
       "Tie::Handle::SkipHeader" : {
          "file" : "lib/Tie/Handle/SkipHeader.pm",
-         "version" : "0.001"
+         "version" : "0.002"
       }
    },
    "release_status" : "stable",
@@ -71,6 +71,6 @@
          "web" : "https://github.com/dagolden/tie-handle-offset"
       }
    },
-   "version" : "0.001"
+   "version" : "0.002"
 }
 
