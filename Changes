@@ -4,6 +4,9 @@ Revision history for Tie-Handle-Offset
 
     [OTHER]
 
+    - Switched from inside-out object pattern to glob HASH slot
+      object pattern
+
     - Inlined methods from Tie::StdHandle to avoid dependency
       on Perl 5.8.9+
 

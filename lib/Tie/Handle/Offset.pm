@@ -6,27 +6,20 @@ package Tie::Handle::Offset;
 # VERSION
 
 use parent qw/Tie::Handle/;
-use Scalar::Util qw( refaddr weaken );
 
 #--------------------------------------------------------------------------#
-# Inside-out data storage and accessor
+# Glob slot accessor
 #--------------------------------------------------------------------------#
-
-my %HEAD_OFF = ();
 
 sub offset {
   my $self = shift;
   if ( @_ ) {
-    return $HEAD_OFF{ refaddr $self } = shift;
+    return *{$self}{HASH}->{offset} = shift;
   }
   else {
-    return $HEAD_OFF{ refaddr $self };
+    return *{$self}{HASH}->{offset};
   }
 }
-
-# Track objects for thread-safety
-
-my %REGISTRY = ();
 
 #--------------------------------------------------------------------------#
 # Tied handle methods
@@ -40,30 +33,30 @@ sub TIEHANDLE
 
   my $self    = \do { no warnings 'once'; local *HANDLE};
   bless $self,$class;
-  my $id = refaddr $self;
-  weaken( $REGISTRY{ $id } = $self );
+
+  # initialize glob HASH slot for attribute storage
+  *{$self} = {} unless ref *{$self}{HASH};
+
   $self->OPEN(@_) if (@_);
   if ( $params->{offset} ) {
-    $HEAD_OFF{ $id } = $params->{offset};
-    seek($self, $HEAD_OFF{ $id }, 0);
+    seek( $self, $self->offset( $params->{offset} ), 0 );
   }
   return $self;
 }
 
 sub TELL    {
-  my $cur = tell($_[0]) - $HEAD_OFF{ refaddr $_[0] };
+  my $cur = tell($_[0]) - $_[0]->offset;
   # XXX shouldn't ever be less than zero, but just in case...
   return $cur > 0 ? $cur : 0;
 }
 
 sub SEEK    {
   my ($self, $pos, $whence) = @_;
-  my $id = refaddr $self;
   my $rc;
   if ( $whence == 0 || $whence == 1 ) { # pos from start, cur
-    $rc = seek($self, $pos + $HEAD_OFF{ $id }, $whence);
+    $rc = seek($self, $pos + $self->offset, $whence);
   }
-  elsif ( _size($self) + $pos < $HEAD_OFF{$id} ) { # from end
+  elsif ( _size($self) + $pos < $self->offset ) { # from end
     $rc = '';
   }
   else {
@@ -74,8 +67,7 @@ sub SEEK    {
 
 sub OPEN
 {
-  my $id = refaddr $_[0];
-  $HEAD_OFF{ $id } = 0;
+  $_[0]->offset(0);
   $_[0]->CLOSE if defined($_[0]->FILENO);
   @_ == 2 ? open($_[0], $_[1]) : open($_[0], $_[1], $_[2]);
 }
@@ -105,39 +97,6 @@ sub WRITE
 {
  my $fh = $_[0];
  print $fh substr($_[1],0,$_[2])
-}
-
-#--------------------------------------------------------------------------#
-# DESTROY()
-#--------------------------------------------------------------------------#
-
-sub DESTROY {
-    my $self = shift;
-    delete $HEAD_OFF{ refaddr $self };
-    delete $REGISTRY{ refaddr $self };
-}
-
-#--------------------------------------------------------------------------#
-# CLONE()
-#--------------------------------------------------------------------------#
-
-sub CLONE {
-    for my $old_id ( keys %REGISTRY ) {
-
-        # look under old_id to find the new, cloned reference
-        my $object = $REGISTRY{ $old_id };
-        my $new_id = refaddr $object;
-
-        # relocate data
-        $HEAD_OFF{ $new_id } = $HEAD_OFF{ $old_id };
-        delete $HEAD_OFF{ $old_id };
-
-        # update the weak reference to the new, cloned object
-        weaken ( $REGISTRY{ $new_id } = $object );
-        delete $REGISTRY{ $old_id };
-    }
-
-    return;
 }
 
 1;
