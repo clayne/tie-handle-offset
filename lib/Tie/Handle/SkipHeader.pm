@@ -1,11 +1,12 @@
 use strict;
-use warnings;
+BEGIN{ if (not $] < 5.006) { require warnings; warnings->import } }
 
 package Tie::Handle::SkipHeader;
 # ABSTRACT: Tied handle that hides an RFC822-style header
 # VERSION
 
-use parent qw/Tie::Handle::Offset/;
+use Tie::Handle::Offset;
+our @ISA = qw/Tie::Handle::Offset/;
 
 sub TIEHANDLE
 {

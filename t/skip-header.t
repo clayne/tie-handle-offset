@@ -1,6 +1,8 @@
 use strict;
-use warnings;
-use Test::More 0.96;
+BEGIN{ if (not $] < 5.006) { require warnings; warnings->import } }
+use Test::More;
+
+plan tests => 5;
 
 use Tie::Handle::SkipHeader;
 

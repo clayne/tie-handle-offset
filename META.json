@@ -32,19 +32,15 @@
       },
       "runtime" : {
          "requires" : {
-            "Scalar::Util" : "0",
             "Tie::Handle" : "0",
-            "parent" : "0",
-            "perl" : "5.006",
-            "strict" : "0",
-            "warnings" : "0"
+            "strict" : "0"
          }
       },
       "test" : {
          "requires" : {
             "File::Find" : "0",
             "File::Temp" : "0",
-            "Test::More" : "0.96"
+            "Test::More" : "0"
          }
       }
    },

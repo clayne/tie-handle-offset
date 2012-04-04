@@ -10,6 +10,10 @@ Revision history for Tie-Handle-Offset
     - Inlined methods from Tie::StdHandle to avoid dependency
       on Perl 5.8.9+
 
+    - Removed dependency on parent.pm and warnings.pm
+
+    - Lowered Test::More dependency version
+
 0.001     2012-03-31 08:17:37 Europe/Paris
     -
 
