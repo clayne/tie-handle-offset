@@ -15,10 +15,10 @@ our @ISA = qw/Tie::Handle/;
 sub offset {
   my $self = shift;
   if ( @_ ) {
-    return *{$self}{HASH}->{offset} = shift;
+    return ${*$self}{offset} = shift;
   }
   else {
-    return *{$self}{HASH}->{offset};
+    return ${*$self}{offset};
   }
 }
 
@@ -34,9 +34,6 @@ sub TIEHANDLE
 
   my $self    = \do { no warnings 'once'; local *HANDLE};
   bless $self,$class;
-
-  # initialize glob HASH slot for attribute storage
-  *{$self} = {} unless ref *{$self}{HASH};
 
   $self->OPEN(@_) if (@_);
   if ( $params->{offset} ) {
