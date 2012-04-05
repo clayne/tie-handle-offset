@@ -47,11 +47,11 @@
    "provides" : {
       "Tie::Handle::Offset" : {
          "file" : "lib/Tie/Handle/Offset.pm",
-         "version" : "0.002"
+         "version" : "0.003"
       },
       "Tie::Handle::SkipHeader" : {
          "file" : "lib/Tie/Handle/SkipHeader.pm",
-         "version" : "0.002"
+         "version" : "0.003"
       }
    },
    "release_status" : "stable",
@@ -67,6 +67,6 @@
          "web" : "https://github.com/dagolden/tie-handle-offset"
       }
    },
-   "version" : "0.002"
+   "version" : "0.003"
 }
 
