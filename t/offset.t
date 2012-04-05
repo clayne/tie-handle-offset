@@ -36,5 +36,4 @@ is( scalar<FH>, undef, "readline correct (undef)" );
 is( seek(*FH,-$size,2), '', "seek into offset fails to seek" );
 is( scalar<FH>, undef, "readline correct (undef)" );
 
-done_testing;
 # COPYRIGHT

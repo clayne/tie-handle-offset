@@ -16,5 +16,4 @@ is( scalar<FH>, "The quick brown fox jumped over the lazy dog.\n", "readline cor
 ok( seek(*FH,0,0), "seek() 0 from start" );
 is( scalar<FH>, "The quick brown fox jumped over the lazy dog.\n", "readline correct" );
 
-done_testing;
 # COPYRIGHT
