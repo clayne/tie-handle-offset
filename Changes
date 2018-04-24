@@ -2,6 +2,10 @@ Revision history for Tie-Handle-Offset
 
 {{$NEXT}}
 
+    [FIXED]
+
+    - Remove t/00-compile.t
+
 0.003     2012-04-05 11:05:59 America/New_York
 
     [BUGFIX]
