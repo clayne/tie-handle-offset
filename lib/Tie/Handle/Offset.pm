@@ -3,7 +3,8 @@ BEGIN{ if (not $] < 5.006) { require warnings; warnings->import } }
 
 package Tie::Handle::Offset;
 # ABSTRACT: Tied handle that hides the beginning of a file
-# VERSION
+
+our $VERSION = '0.004';
 
 use Tie::Handle;
 our @ISA = qw/Tie::Handle/;
